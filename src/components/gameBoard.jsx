@@ -1,8 +1,13 @@
 import "../assets/css/gameBoard.css";
-function GameBoard() {
+import Shape from "./shape";
+function GameBoard({ shapes, onShapeClick }) {
     return (
         <div className="game-board">
-
+            <Shape
+                key={shape.id}
+                {...shapes}
+                onclick={() => onShapeClick(shape.id)}
+            />
         </div>
     )
 }
