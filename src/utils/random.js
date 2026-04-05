@@ -1,7 +1,7 @@
 // Generate the 50 colors once
 const generatePalette = (amount) => {
   return Array.from({ length: amount }, (_, i) => {
-    return `hsl(${i * (360 / amount)}, 70%, 60%)`;
+    return `hsl(${i * (360 / amount)}, 70%, ${i * (100 / amount)}%)`;
   });
 };
 

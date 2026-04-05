@@ -8,13 +8,15 @@ function App() {
   const [currentSize, setCurrentSize] = useState(100)
 
   const handleHit = () => {
-    setCurrentSize(prev => Math.max(prev - 10, 15));
+    const nextSize = Math.max(currentSize - 10, 15);
+    setCurrentSize(nextSize);
 
+    const randomSize = Math.floor(Math.random() * 80) + 20;
     const newShape = {
       id: Date.now(),
       x: getRandomPos(),
       y: getRandomPos(),
-      size: currentSize,
+      size: randomSize,
       color: getRandomPaletteColor()
     }
     setShapes([newShape])
