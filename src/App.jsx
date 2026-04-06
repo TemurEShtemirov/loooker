@@ -46,7 +46,7 @@ function App() {
       ) : (
         <>
           {shapes.length === 0 ? (
-            <button onClick={handleHit} className="start-btn">START GAME</button>
+            <button onClick={handleHit} className="start-btn ">START GAME</button>
           ) : (
             <>
               <div className="game-hud">
