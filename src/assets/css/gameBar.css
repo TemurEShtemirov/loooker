@@ -1,12 +1,35 @@
 /* Add this to your CSS */
 .game-board {
-    width: 100%;
-    height: 80vh;
-    /* This is the most important line! */
+
+    /* 1. Positioning & Size */
+    width: 90%;
+    max-width: 800px;
+    height: 70vh;
     position: relative;
-    background-color: #121212;
-    /* Dark background so HSL pops */
+    /* REQUIRED: So shapes can use position: absolute */
+    margin: 120px auto 20px;
+
+    /* 2. Visual Style */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0f0f1a 100%);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    /* Matches the "Liquid/OIS" rounded aesthetic */
+
+    /* 3. The Liquid Secret */
     overflow: hidden;
-    border: 2px solid #333;
-    margin-top: 20px;
+    /* Keeps shapes from "leaking" out of the board */
+    filter: url('#liquid-goo');
+    /* Links to your LiquidFilter component ID */
+
+    /* 4. Performance */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    transition: border-color 0.3s ease;
+
+}
+
+.game-board:active {
+    border-color: rgba(6, 182, 212, 0.5);
 }
