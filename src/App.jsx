@@ -16,6 +16,8 @@ function App() {
   // Pulling everything from your custom hook
   const { timeLeft, isGameOver, addTime, restartGame, score, isActive, startGame } = useGameLogic();
 
+
+
   const handleHit = () => {
     if (isGameOver) return;
     if (!isActive) startGame();
@@ -33,7 +35,12 @@ function App() {
     }
 
     const finalSize = Math.max(Math.floor(nextSize), 10);
-    setCurrentSize(finalSize);
+    setCurrentSize(finalSize,);
+
+    if (window.navigator.vibrate) {
+      window.navigator.vibrate(150);
+    }
+    // Vibrate for 100ms on hit for feedback
 
     // 2. Select a random Shape Type
     const shapeTypes = [
@@ -56,11 +63,17 @@ function App() {
     addTime();
     setShapes([newShape]);
   };
+
+
   //INFO func to restart game after game over, also resets the size and clears the shapes
   const handleRestart = () => {
     setCurrentSize(100);
     setShapes([]);
     restartGame();
+    if (window.navigator.vibrate) {
+      window.navigator.vibrate([200, 100, 200]); // Vibrate for feedback on restart
+    }
+
   };
 
 
@@ -138,7 +151,9 @@ function App() {
             <p className="text-cyan-400 text-2xl mb-8 font-mono tracking-tighter">Score: {score}</p>
 
             <motion.button
-              onClick={handleRestart}
+              onClick={() => {
+                handleRestart(); // Calls your restart function
+              }}
               className="fluid-btn mt-10 px-12 py-4 rounded-2xl text-xs font-black uppercase tracking-[0.2em]"
               whileHover={{
                 borderRadius: "40px 40px 40px 40px",
@@ -162,7 +177,7 @@ function App() {
           >
             <ThemeToggleButton isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
             <button
-              onClick={handleHit}
+              onClick={() => { handleHit() }} // Start the game on click
               className={`text-5xl sm:text-7xl font-black italic tracking-tighter transition-colors ${isDarkMode ? 'text-white hover:text-cyan-400' : 'text-black hover:text-cyan-600'
                 }`}
             >
