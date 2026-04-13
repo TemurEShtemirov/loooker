@@ -101,7 +101,7 @@ function App() {
       document.title = `Loook for... 👀 (${score})`;
     } else {
       // Stage 1: Idle - Brand Mode
-      document.title = `Loooker v1.2.1`;
+      document.title = `Loooker v1.2.2`;
     }
 
     // CLEANUP: This is crucial! It stops the interval when the component 

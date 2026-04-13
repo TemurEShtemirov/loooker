@@ -16,7 +16,7 @@ export const useGameLogic = () => {
       setHighScore(score);
       localStorage.setItem("shapeLooker_best", score.toString());
       if (window.navigator.vibrate) {
-        window.navigator.vibrate([100, 50, 100]);
+        window.navigator.vibrate([75, 100, 75]);
       }
     }
     if (!isActive || isGameOver || timeLeft <= 0) {
