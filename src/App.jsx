@@ -20,8 +20,12 @@ function App() {
 
   const handleHit = () => {
     if (isGameOver) return;
-    if (!isActive) startGame();
-
+    if (!isActive) {
+      startGame();
+      if (window.navigator.vibrate) {
+        window.navigator.vibrate(100); // Vibrate for feedback on game start
+      }
+    }
     // 1. Define the "Chaos Factor" for Size
     const roll = Math.random();
     let nextSize;
@@ -38,7 +42,7 @@ function App() {
     setCurrentSize(finalSize,);
 
     if (window.navigator.vibrate) {
-      window.navigator.vibrate(150);
+      window.navigator.vibrate(50);
     }
     // Vibrate for 100ms on hit for feedback
 
@@ -97,7 +101,7 @@ function App() {
       document.title = `Loook for... 👀 (${score})`;
     } else {
       // Stage 1: Idle - Brand Mode
-      document.title = `Loooker v1.2.0`;
+      document.title = `Loooker v1.2.1`;
     }
 
     // CLEANUP: This is crucial! It stops the interval when the component 
