@@ -52,6 +52,7 @@ const Shape = ({ x, y, size, onClick }) => {
                 style={{ borderRadius: '40% 60% 70% 30% / 40% 50% 60% 40%' }}
             />
         </motion.div>
+
     );
 };
 

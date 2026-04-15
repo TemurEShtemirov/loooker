@@ -17,6 +17,9 @@
   }
 }
 
+.gooey-container {
+  filter: url('#gooey-filter');
+}
 
 .fluid-btn {
   @apply flex items-center justify-center transition-all duration-500;

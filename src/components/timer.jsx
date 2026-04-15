@@ -13,7 +13,7 @@ const Timer = ({ time }) => {
             <div className="flex justify-between items-end text-[10px] mb-2 font-mono uppercase tracking-[0.2em] transition-colors duration-500">
                 {/* Using currentColor or adaptive opacity classes */}
                 <span className={isDarkMode ? "text-white/50" : "text-black/50"}>
-                    ShapeLooker
+                    ShapeLooker  &nbsp;
                 </span>
                 <span className="text-cyan-400 font-bold text-xs">{time}s</span>
             </div>

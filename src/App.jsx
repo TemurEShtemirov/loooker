@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useGameLogic } from './hooks/useGameLogic';
 import { useTheme } from './context/ThemeContext';
 import { getRandomPos, getRandomPaletteColor } from './utils/random';
@@ -12,14 +12,17 @@ import StartScreen from './components/StartScreen'; // New
 import GameOverScreen from './components/GameOverScreen'; // New
 import AuthorTag from './components/AuthorTag'; // New
 import LiquidFilter from './assets/svg/liquidFilter';
+import { useDailyReward } from './hooks/useDailyReward';
+import DailyRewardBadge from './components/DailyRewardBadge';
+import CoinDisplay from './components/coinDisplay';
 
 function App() {
   const [shapes, setShapes] = useState([]);
   const [currentSize, setCurrentSize] = useState(100);
   const { isDarkMode, toggleTheme } = useTheme();
   const { timeLeft, isGameOver, addTime, restartGame, score, isActive, startGame, highScore } = useGameLogic();
-
-  // --- BRAIN: Chaos & Shape Generation ---
+  const { canClaim, rewardHistory, claimReward, addCoins, coins } = useDailyReward();
+  const lastReward = rewardHistory.length > 0 ? rewardHistory[rewardHistory.length - 1] : { icon: '💧' };  // --- BRAIN: Chaos & Shape Generation ---
   const handleHit = () => {
     if (isGameOver) return;
     if (!isActive) startGame();
@@ -49,12 +52,29 @@ function App() {
     if (navigator.vibrate) navigator.vibrate(50);
   };
 
+
   const handleRestart = () => {
     setCurrentSize(100);
     setShapes([]);
     restartGame();
     if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
   };
+
+  const processEndGameEarnings = (finalScore) => {
+    // We use Math.floor so that 19 points still only gives 5 coins (encourages better play!)
+    const earned = Math.floor(finalScore / 10) * 5;
+
+    if (earned > 0) {
+      addCoins(earned);
+      console.log(`Converted ${finalScore} score into ${earned} coins.`);
+    }
+  };
+
+  useEffect(() => {
+    if (isGameOver) {
+      processEndGameEarnings(score);
+    }
+  }, [isGameOver]);
 
   // --- BROWSER: Document Title Logic ---
   useEffect(() => {
@@ -70,27 +90,59 @@ function App() {
   }, [isGameOver, isActive, score]);
 
   return (
-    <div className={`App relative min-h-[100dvh] w-full flex flex-col items-center justify-center transition-all duration-700 ${isDarkMode ? 'bg-[#0f0f1a] dark-mode' : 'bg-[#f8fafc] light-mode'}`}>
+    <div className={`App relative min-h-[100dvh] w-full flex flex-col items-center transition-all duration-700 ${isDarkMode ? 'bg-[#0f0f1a] dark-mode' : 'bg-[#f8fafc] light-mode'}`}>
 
       <LiquidFilter />
-      <ThemeToggleButton isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
       <AuthorTag isDarkMode={isDarkMode} />
 
+      {/* --- THE HUD: Spaced to the corners --- */}
+      <div className="fixed top-0 left-0 w-full p-6 flex justify-between items-start z-[100] pointer-events-none">
+
+        {/* TOP LEFT: Coins */}
+        <div className="pointer-events-auto">
+          <CoinDisplay amount={coins} />
+        </div>
+
+        {/* TOP RIGHT: Theme */}
+        <div className="pointer-events-auto">
+          <ThemeToggleButton isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+        </div>
+
+      </div>
       <AnimatePresence mode="wait">
         {isGameOver ? (
           <GameOverScreen score={score} onRestart={handleRestart} isDarkMode={isDarkMode} />
         ) : !isActive ? (
-          <StartScreen onStart={handleHit} isDarkMode={isDarkMode} />
+          /* --- 2. START SCREEN: Centered vertically --- */
+          <div className="flex flex-col items-center justify-center flex-grow">
+            <StartScreen
+              onStart={handleHit}
+              isDarkMode={isDarkMode}
+              canClaim={canClaim}
+              onClaim={claimReward}
+              currentReward={lastReward}
+            />
+          </div>
         ) : (
-          <div className="w-full max-w-md flex flex-col items-center flex-grow justify-evenly">
-            <header className="text-center">
+          /* --- 3. GAMEPLAY: Pushed down slightly to clear HUD --- */
+          <motion.div
+            key="game"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="w-full max-w-md flex flex-col items-center justify-start pt-32 px-6 flex-grow"
+          >
+            <header className="text-center mb-12">
               <Timer time={timeLeft} />
-              <div className="font-mono text-xs tracking-widest mt-3 opacity-50">
+              <div className={`font-mono text-[10px] tracking-widest mt-4 opacity-40 ${isDarkMode ? 'text-white' : 'text-black'}`}>
                 SCORE: {score} | BEST: {highScore}
               </div>
             </header>
-            <GameBoard shapes={shapes} onShapeClick={handleHit} />
-          </div>
+
+            <div className="w-full flex justify-center items-center">
+              <GameBoard shapes={shapes} onShapeClick={handleHit} />
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
