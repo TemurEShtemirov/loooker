@@ -15,6 +15,7 @@ import LiquidFilter from './assets/svg/liquidFilter';
 import { useDailyReward } from './hooks/useDailyReward';
 import DailyRewardBadge from './components/DailyRewardBadge';
 import CoinDisplay from './components/coinDisplay';
+import { useChaosEngine } from './hooks/useChaosEngine';
 
 function App() {
   const [shapes, setShapes] = useState([]);
@@ -23,6 +24,8 @@ function App() {
   const { timeLeft, isGameOver, addTime, restartGame, score, isActive, startGame, highScore } = useGameLogic();
   const { canClaim, rewardHistory, claimReward, addCoins, coins } = useDailyReward();
   const lastReward = rewardHistory.length > 0 ? rewardHistory[rewardHistory.length - 1] : { icon: '💧' };  // --- BRAIN: Chaos & Shape Generation ---
+  const { intensity, shouldShake } = useChaosEngine(score, highScore, isActive);
+
   const handleHit = () => {
     if (isGameOver) return;
     if (!isActive) startGame();
@@ -90,7 +93,13 @@ function App() {
   }, [isGameOver, isActive, score]);
 
   return (
-    <div className={`App relative min-h-[100dvh] w-full flex flex-col items-center transition-all duration-700 ${isDarkMode ? 'bg-[#0f0f1a] dark-mode' : 'bg-[#f8fafc] light-mode'}`}>
+    <motion.div className={`App relative min-h-[100dvh] w-full flex flex-col items-center transition-all duration-700 ${isDarkMode ? 'bg-[#0f0f1a] dark-mode' : 'bg-[#f8fafc] light-mode'}`}
+      animate={shouldShake ? {
+        x: [0, -intensity * 2, intensity * 2, 0],
+        y: [0, intensity * 2, -intensity * 2, 0]
+      } : {}}
+      transition={{ repeat: Infinity, duration: 0.1 }}
+    >
 
       <LiquidFilter />
       <AuthorTag isDarkMode={isDarkMode} />
@@ -145,7 +154,7 @@ function App() {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
 

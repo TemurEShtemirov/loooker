@@ -3,6 +3,12 @@
 /* Optimized iOS 26 Material */
 /* index.css */
 
+.chromatic-hit {
+  text-shadow: 2px 0 red, -2px 0 blue;
+  filter: contrast(1.5) brightness(1.2);
+  transition: all 0.1s;
+}
+
 @keyframes liquid-drift {
   0% {
     background-position: 0% 50%;
