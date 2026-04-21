@@ -45,7 +45,7 @@ Unlike standard clicker games, **SHAPELOOKER** features a dynamic difficulty cur
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/shapelooker.git
+   git clone https://github.com/TemurEShtemirov/loooker.git
    ```
 
 2. **Install dependencies:**
